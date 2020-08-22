@@ -18,9 +18,10 @@ class Dashboard extends Component {
       productDetails: [],
       modelVisible: false,
       sortProducts: "",
+      numColumns: 1,
+      view: 'Grid'
     }
   }
-
   componentDidMount() {
     const { fetchProductDetails, productDetails } = this.props.dashboard;
     fetchProductDetails(this.state.sortProducts);
@@ -34,10 +35,14 @@ class Dashboard extends Component {
       />
     );
   }
+  changeView = () => {
+    (this.state.view == 'Grid') ? this.setState({ numColumns: 2, view: 'linear' }) : this.setState({ numColumns: 1, view: 'Grid' });
+  }
   render() {
-    const { fetchProductDetails, productDetails } = this.props.dashboard;
+    const { fetchProductDetails, productDetails, resetProductDetails } = this.props.dashboard;
     const { navigate } = this.props.navigation;
     var radio_props = [
+      { label: 'All', value: '' },
       { label: 'Price High to Low', value: 'price_desc' },
       { label: 'Price Low To High', value: 'price_asc' }
     ];
@@ -45,6 +50,8 @@ class Dashboard extends Component {
       <View style={styles.container}>
         <FlatList
           data={productDetails}
+          key={this.state.numColumns}
+          numColumns={this.state.numColumns}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={this.flatListItemSeparator}
           renderItem={({ item }) => {
@@ -77,8 +84,13 @@ class Dashboard extends Component {
                 initial={0}
                 onPress={(value) => {
                   this.setState({ sortProducts: value })
-                  fetchProductDetails(this.state.sortProducts);
                 }}
+              />
+              <Button title='sort' onPress={() => {
+                resetProductDetails();
+                console.log(this.state.sortProducts);
+                fetchProductDetails(this.state.sortProducts);
+              }}
               />
               <Button title="Click To Close Modal" onPress={() => {
                 this.setState({ modelVisible: false })
@@ -93,8 +105,9 @@ class Dashboard extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.btn}
+              onPress={() => this.changeView()}
             >
-              <Text style={styles.btnText}>VIEW</Text>
+              <Text style={styles.btnText}>{this.state.view} View</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView, Alert, Button } from 'react-native';
+import Share from 'react-native-share';
 import { inject, observer } from 'mobx-react';
 import Cart from '../components/Cart';
 import Counter from '../components/Counter';
@@ -20,7 +21,19 @@ class ProductDetails extends Component {
     fetchProductDetails(getParam('product_id'));
     fetchProductReviews(getParam('product_id'));
   }
+  shareData = async (productDetails) => {
 
+    console.log("knnnnnn" + productDetails.image_url);
+    const shareOptions = {
+      message: productDetails.name + "\n" + productDetails.special_price + "\n",
+      url: productDetails.image_url
+    };
+    try {
+      const ShareResponse = await Share.open(shareOptions);
+    } catch (error) {
+      console.log('Error=>', error);
+    }
+  };
   render() {
     const { productDetails, addProductInCart, currentUserEmailId, productReviews } = this.props.productDetails;
     const { counter } = this.props.counter;
@@ -31,6 +44,7 @@ class ProductDetails extends Component {
           <Image
             style={styles.imageView}
             source={{ uri: productDetails.image_url }} />
+          <Button title='share' onPress={() => this.shareData(productDetails)} />
           <Text style={styles.textView}>  {productDetails.descriptions}</Text>
           <View style={styles.textContainer}>
             <Text style={styles.textView}> Price - {productDetails.price}</Text>
@@ -68,8 +82,8 @@ class ProductDetails extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => this.props.navigation.navigate('CheckOut')}>
-            <Text style={styles.btnText}>Checkout</Text>
+            onPress={() => this.props.navigation.navigate('ShoppingCart')}>
+            <Text style={styles.btnText}>Shopping Cart</Text>
           </TouchableOpacity>
         </View>
       </View >

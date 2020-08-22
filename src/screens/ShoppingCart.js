@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native';
+import { Text, View, TouchableOpacity, Image, StyleSheet, FlatList, Modal, Button } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { inject, observer } from 'mobx-react';
 
@@ -9,7 +9,11 @@ class ShoppingCart extends Component {
   constructor(props) {
     super(props);
     this.props = props;
+    this.state = {
+      visibleModel: false,
+    }
     this.getCurrentUser();
+
   }
   getCurrentUser = async () => {
     const { getCartProducts } = this.props.shoppingCart;
@@ -30,7 +34,7 @@ class ShoppingCart extends Component {
     );
   }
   render() {
-    const { cartProducts, totalOrderValue } = this.props.shoppingCart;
+    const { cartProducts, totalOrderValue, getDiscount, discountValue, promocode } = this.props.shoppingCart;
     console.log(cartProducts);
     return (
       <View style={styles.container}>
@@ -54,9 +58,37 @@ class ShoppingCart extends Component {
             );
           }}
         />
+        <Modal
+          animationType={"fade"}
+          transparent={false}
+          visible={this.state.visibleModel}>
+          <View >
+            <TouchableOpacity style={styles.btn} onPress={() => {
+              getDiscount('GET10')
+            }}>
+              <Text >Get 10% off</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={() => getDiscount('GET20')}>
+              <Text >GET 20 % Off</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={() => getDiscount('GET50')}>
+              <Text >GET 50 % Off</Text>
+            </TouchableOpacity>
+            <Button title="Click To Close Modal" onPress={() => this.setState({ visibleModel: false })}
+            />
+          </View>
+        </Modal>
         <View style={styles.btnContainer}>
+          <TouchableOpacity style={styles.btn} onPress={() => this.setState({ visibleModel: true })}>
+            <Text style={styles.btnText}>{promocode}</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.btn}>
             <Text style={styles.btnText}>Total Order  {totalOrderValue}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.btnContainer}>
+          <TouchableOpacity style={styles.btn}>
+            <Text style={styles.btnText}>Amount Paid  {discountValue}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btn}

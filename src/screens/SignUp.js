@@ -63,7 +63,9 @@ class SignUp extends Component {
     (passwordFormat.test(this.state.password)) ? this.setState({ isPasswordValid: true }) : this.setState({ isPasswordValid: false });
   }
   passwordMatch = () => {
-    ((((this.state.password).localeCompare(this.state.confirmPassword))) == 0) ? this.setState({ passwordMatch: true }) : this.setState({ passwordMatch: false });
+    console.log(((this.state.password) === (this.state.confirmPassword)));
+    ((((this.state.password) === (this.state.confirmPassword))) == 0) ? this.setState({ passwordMatch: true }) : this.setState({ passwordMatch: false });
+
   }
   registerUser = () => {
     const { addUser } = this.props.signUp;
@@ -162,13 +164,15 @@ class SignUp extends Component {
             secureTextEntry
             value={this.state.confirmPassword}
             onChangeText={(confirmPassword) => {
-              this.setState({ confirmPassword: confirmPassword });
               this.passwordMatch();
+              this.setState({ confirmPassword: confirmPassword });
             }} />
           {!this.state.passwordMatch && <Text style={styles.text}>Password is Not Match</Text>}
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => this.registerUser()}
+            onPress={() => {
+              this.registerUser()
+            }}
           >
             <Text style={styles.btnText}>SignUp</Text>
           </TouchableOpacity>

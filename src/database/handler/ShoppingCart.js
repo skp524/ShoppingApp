@@ -1,4 +1,5 @@
 import { ShoppingCart, Product } from '../schema/ShoppingCart';
+import { Alert } from 'react-native';
 const Realm = require('realm');
 
 const databaseOptions = {
@@ -41,7 +42,7 @@ export const getCartProducts = async (emailId) => new Promise((resolve, reject) 
   Realm.open(databaseOptions)
     .then(realm => {
       let allProducts = realm.objectForPrimaryKey('ShoppingCart', emailId);
-      resolve(allProducts);
+      (allProducts !== undefined) ? resolve(allProducts) : Alert.alert('Your Cart is Empty');
     })
     .catch(error => {
       reject(error);
@@ -52,7 +53,8 @@ export const deleteCartProducts = async (emailId) => new Promise((resolve, rejec
     .then(realm => {
       realm.write(() => {
         let allProducts = realm.objectForPrimaryKey('ShoppingCart', emailId);
-        realm.delete(allProducts);
+        console.log(allProducts);
+        (allProducts !== undefined) ? realm.delete(allProducts) : Alert.alert('Your Cart is Empty');
         resolve();
       });
     })

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 import { inject, observer } from 'mobx-react';
+import AsyncStorage from '@react-native-community/async-storage';
 
 @inject('profile')
 @observer
@@ -27,7 +27,7 @@ class Profile extends Component {
     (nameFormat.test(this.state.name)) ? this.setState({ isNameValid: true }) : this.setState({ isNameValid: false });
   }
   getCurrentUser = async () => {
-    const { getUser, userDetails } = this.props.profile;
+    const { getUser } = this.props.profile;
     try {
       const emailId = await AsyncStorage.getItem('loginAccessToken')
       if (emailId !== null) {
@@ -37,15 +37,22 @@ class Profile extends Component {
       console.log(error);
     }
   }
-
   render() {
-    const { updateUser, userDetails } = this.props.profile;
+    const { updateUser, userDetails, getUser } = this.props.profile;
+    console.log(userDetails);
     return (
       < View style={styles.container}>
-        <Image
-          style={styles.imagePicker}
-          source={require('../assets/add-photo.png')}
-        />
+        <View style={styles.imageContainer}>
+          <TouchableOpacity>
+            {(userDetails.imageURI !== '') ? <Image
+              style={styles.image}
+              source={{ uri: userDetails.imageURI }}
+            /> :
+              <View style={styles.background}>
+                <Text style={styles.txt}>{(userDetails.name).slice(0, 1)}</Text>
+              </View>}
+          </TouchableOpacity>
+        </View>
         <View style={styles.innerContainer}>
           <TextInput
             placeholder='Enter Your Name'
@@ -99,6 +106,7 @@ class Profile extends Component {
                     name: this.state.name
                   }
                   updateUser(userDetail)
+                  getUser(userDetails.emailId);
                   Alert.alert("Data Update Sucessfull")
                 }
               }}
@@ -154,7 +162,24 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#fff',
     fontSize: 18
-  }
-
+  },
+  background: {
+    backgroundColor: 'mediumseagreen',
+    width: 200,
+    height: 200,
+    marginTop: 50,
+    borderRadius: 100
+  },
+  image: {
+    width: 200,
+    height: 250,
+    borderRadius: 100
+  },
+  txt: {
+    padding: 20,
+    fontSize: 100,
+    alignSelf: 'center',
+    color: '#fff'
+  },
 });
 export default Profile;

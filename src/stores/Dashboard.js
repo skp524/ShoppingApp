@@ -34,6 +34,9 @@ class Dashboard {
         });
     };
   }
+  @observable resetProductDetails = () => {
+    this.productDetails = [];
+  }
   @computed get _productDetails() {
     return this.productDetails;
   }
