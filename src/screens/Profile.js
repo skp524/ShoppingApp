@@ -39,7 +39,6 @@ class Profile extends Component {
   }
   render() {
     const { updateUser, userDetails, getUser } = this.props.profile;
-    console.log(userDetails);
     return (
       < View style={styles.container}>
         <View style={styles.imageContainer}>
@@ -107,7 +106,6 @@ class Profile extends Component {
                   }
                   updateUser(userDetail)
                   getUser(userDetails.emailId);
-                  Alert.alert("Data Update Sucessfull")
                 }
               }}
             >

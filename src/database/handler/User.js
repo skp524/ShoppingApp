@@ -1,11 +1,19 @@
 import { UserSchema } from '../schema/User';
+import { Alert } from 'react-native';
 const Realm = require('realm');
 
 export const addUser = async (userDetails) => new Promise((resolve, reject) => {
   Realm.open({ schema: [UserSchema] })
     .then(realm => {
       realm.write(() => {
-        realm.create('Users', userDetails);
+        let user = realm.objectForPrimaryKey('Users', userDetails.emailId);
+        if (user == undefined) {
+          realm.create('Users', userDetails);
+          Alert.alert('SignUp Sucessfull');
+        }
+        else {
+          Alert.alert("Email Id Already Registered");
+        }
         resolve();
       });
     })
@@ -33,6 +41,7 @@ export const updateUser = async (userDetails) => new Promise((resolve, reject) =
           emailId: userDetails.emailId,
           name: userDetails.name,
         }, 'modified');
+        Alert.alert("Data Update Sucessfull")
         resolve();
       });
     })

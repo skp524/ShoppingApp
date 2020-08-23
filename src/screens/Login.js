@@ -68,7 +68,6 @@ class Login extends Component {
             fetch('https://graph.facebook.com/v2.5/me?fields=name,email,picture&access_token=' + data.accessToken.toString())
               .then((response) => response.json())
               .then((json) => {
-                console.log(json);
                 let userDetails = {
                   imageURI: json.picture.data.url,
                   name: json.name,

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import PushNotification from 'react-native-push-notification';
 // import Geolocation from '@react-native-community/geolocation';
 // import Geocoder from 'react-native-geocoding';
 import { inject, observer } from 'mobx-react';
@@ -40,15 +39,8 @@ class CheckOut extends Component {
       <View style={styles.container}>
         <View style={styles.btnContainer}>
           <TouchableOpacity style={styles.btn}
-            onPress={() => {
-              deleteCartProducts(currentUserEmailId);
-              Alert.alert('Product Delivered with in 7 working Days');
-              PushNotification.localNotificationSchedule({
-                message: "Thanks For Shopping",
-                date: new Date(Date.now()), // in 60 secs
-                allowWhileIdle: false,
-              });
-            }
+            onPress={() =>
+              deleteCartProducts(currentUserEmailId)
             }
           >
             <Text style={styles.btnText}>Deliver This Address</Text>

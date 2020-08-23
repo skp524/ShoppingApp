@@ -35,7 +35,6 @@ class ShoppingCart extends Component {
   }
   render() {
     const { cartProducts, totalOrderValue, getDiscount, discountValue, promocode } = this.props.shoppingCart;
-    console.log(cartProducts);
     return (
       <View style={styles.container}>
         <FlatList

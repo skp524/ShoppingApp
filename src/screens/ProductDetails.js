@@ -22,8 +22,6 @@ class ProductDetails extends Component {
     fetchProductReviews(getParam('product_id'));
   }
   shareData = async (productDetails) => {
-
-    console.log("knnnnnn" + productDetails.image_url);
     const shareOptions = {
       message: productDetails.name + "\n" + productDetails.special_price + "\n",
       url: productDetails.image_url

@@ -34,7 +34,6 @@ class SignUp extends Component {
       },
     };
     ImagePicker.launchImageLibrary(options, (response) => {
-      console.log('Response = ', options)
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -42,10 +41,9 @@ class SignUp extends Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
-          imageURI: response.uri,
+          imageURI: (response.fileSize > 2000000) ? Alert.alert('Image Size must be less than 2 mb') : response.uri,
         });
       }
     });
@@ -63,13 +61,10 @@ class SignUp extends Component {
     (passwordFormat.test(this.state.password)) ? this.setState({ isPasswordValid: true }) : this.setState({ isPasswordValid: false });
   }
   passwordMatch = () => {
-    console.log(((this.state.password) === (this.state.confirmPassword)));
-    ((((this.state.password) === (this.state.confirmPassword))) == 0) ? this.setState({ passwordMatch: true }) : this.setState({ passwordMatch: false });
-
+    ((((this.state.password).localeCompare(this.state.confirmPassword))) == 0) ? this.setState({ passwordMatch: true }) : this.setState({ passwordMatch: false });
   }
   registerUser = () => {
     const { addUser } = this.props.signUp;
-
     if (!this.state.isNameValid) {
       Alert.alert("Email Id is Mandatory");
     }
@@ -101,7 +96,6 @@ class SignUp extends Component {
         signUpMethod: this.state.signUpMethod
       }
       addUser(userDetails);
-      Alert.alert('SignUp Sucessfull');
     }
   }
   render() {
@@ -109,7 +103,6 @@ class SignUp extends Component {
     return (
       < View style={styles.container}>
         <TouchableOpacity
-
           onPress={() => this.imagePicker()}
         >
           <Image
@@ -150,6 +143,7 @@ class SignUp extends Component {
             placeholder='Enter Your Password'
             style={styles.inputText}
             secureTextEntry
+            onBlur={() => this.passwordMatch()}
             value={this.state.password}
             onChangeText={(password) => {
               this.setState({ password: password });
@@ -163,8 +157,8 @@ class SignUp extends Component {
             style={styles.inputText}
             secureTextEntry
             value={this.state.confirmPassword}
+            onBlur={() => this.passwordMatch()}
             onChangeText={(confirmPassword) => {
-              this.passwordMatch();
               this.setState({ confirmPassword: confirmPassword });
             }} />
           {!this.state.passwordMatch && <Text style={styles.text}>Password is Not Match</Text>}

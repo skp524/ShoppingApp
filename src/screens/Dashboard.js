@@ -88,7 +88,6 @@ class Dashboard extends Component {
               />
               <Button title='sort' onPress={() => {
                 resetProductDetails();
-                console.log(this.state.sortProducts);
                 fetchProductDetails(this.state.sortProducts);
               }}
               />

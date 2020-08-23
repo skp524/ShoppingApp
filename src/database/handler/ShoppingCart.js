@@ -1,4 +1,5 @@
 import { ShoppingCart, Product } from '../schema/ShoppingCart';
+import PushNotification from 'react-native-push-notification';
 import { Alert } from 'react-native';
 const Realm = require('realm');
 
@@ -53,8 +54,15 @@ export const deleteCartProducts = async (emailId) => new Promise((resolve, rejec
     .then(realm => {
       realm.write(() => {
         let allProducts = realm.objectForPrimaryKey('ShoppingCart', emailId);
-        console.log(allProducts);
-        (allProducts !== undefined) ? realm.delete(allProducts) : Alert.alert('Your Cart is Empty');
+        if (allProducts !== undefined) {
+          realm.delete(allProducts)
+          PushNotification.localNotificationSchedule({
+            message: "Thanks For Shopping",
+            date: new Date(Date.now()), // in 60 secs
+            allowWhileIdle: false,
+          });
+        }
+        else { Alert.alert('Your Cart is Empty'); }
         resolve();
       });
     })

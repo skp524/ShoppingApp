@@ -35,7 +35,6 @@ class ShoppingCart {
       this.discountValue = ((this.totalOrderValue) - (this.totalOrderValue * .5));
       this.promocode = 'GET 50% OFF';
     }
-    console.log(this.discountValue);
   };
 }
 export default ShoppingCart;
